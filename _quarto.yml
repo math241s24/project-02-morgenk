@@ -2,26 +2,28 @@ project:
   type: website
 
 website:
-  title: Project 2
+  title: "Wan Shi Tong's Library"
   navbar:
     right:
       - icon: github
-        href: https://github.com/math241s24/project-02
+        href: https://github.com/math241s24/project-02-morgenk
     left:
-      - text: Project
+      - text: Home
         href: index.qmd
       - text: "Proposal"
         href: proposal.qmd
       - text: "Presentation"
         href: presentation.qmd
+      - text: "Shiny App"
+        href: shiny_app.qmd
       - text: "About"
         href: about.qmd
+        
 
 format:
   html:
-    theme: default
+    theme: minty
     toc: true
-
+    
 execute:
   freeze: auto
-

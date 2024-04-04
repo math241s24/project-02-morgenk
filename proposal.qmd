@@ -1,7 +1,7 @@
 ---
-title: "Project 2"
+title: "Wan Shi Tong's Library"
 subtitle: "Proposal"
-authors: ""
+authors: "Morgen Kaufman"
 format: html
 editor: visual
 ---
@@ -10,21 +10,150 @@ editor: visual
 #| label: load-pkgs
 #| message: false
 #| warning: false
+#| echo: false 
 
 library(tidyverse)
+library(dplyr)
+library(stringr)
+devtools::install_github("averyrobbins1/appa")
 ```
+
+## Goals
+
+My goal is to create a sleek and accessible website featuring a complex shiny app which allows users to explore trends across the episodes of Avatar: The Last Airbender.
+
+![](images/avatar-the-last-airbender-appa-512x512.png){fig-align="center" width="300"}
+
+------------------------------------------------------------------------
 
 ## Dataset
 
 ```{r load-data}
 #| label: load-data
 #| message: false
+#| echo: false 
 
 ## read data 
+atla <- appa::appa
 ```
 
+This project will utilize the [appa package](https://github.com/averyrobbins1/appa) by [Avery Robbins](https://github.com/averyrobbins1). This package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender. The dataframe includes 13,385 rows and 12 variables.
+
+| Variable Name     | Description                                                             |
+|-----------------|-------------------------------------------------------|
+| id                | an id number for each row, essentially just a row number                |
+| book              | the name of each book, or season, in the series: Water, Earth, and Fire |
+| book_num          | an id number for each book, 1-3                                         |
+| chapter           | the name of each chapter, or episode, in the series                     |
+| chapter_num       | an id number for each chapter                                           |
+| character         | every character who ever spoke in the series                            |
+| full_text         | the words spoken by each character + additional scene descriptions      |
+| character_words   | the words spoken by each character                                      |
+| scene_description | the descriptions of what is happening on screen                         |
+| writer            | the writer, or writers, for each episode                                |
+| director          | the director for each episode                                           |
+| imdb_rating       | imdb ratings on a scale of 1 to 10                                      |
+
+------------------------------------------------------------------------
 
 ## Reason for Choosing this Dataset
 
+From the beginning, I knew I wanted to explore something pop culture related that would also lend itself to performing text analysis. However, my primary motivation for choosing this dataset is somewhat personal. As a child, Avatar was one of my favorite shows and I have very fond childhood memories of watching it. As such, the show holds a very special place in my heart and I thought that being able to explore it in a new way would be fun and provide me with some new information regarding the show. Additionally, this dataset is quite a fun one and differs from most datasets that I have used in the past.
+
+------------------------------------------------------------------------
 
 ## Questions and Analysis Plan
+
+#### Questions
+
+-   How are lines distributed across episodes?
+
+    -   How does it differ by character?
+
+    -   How does it differ by season?
+
+    -   How does it differ by director?
+
+    -   How does it differ by character gender?
+
+-   How doe IMDB scores change over the course of the show?
+
+    -   What is the IMDB score average per season?
+
+#### Project Repo Organization
+
+-   This project repo will have 6 main files that will contain the majority of my work. Each file with the excpetion of the yml will corespond to a page on my website and address a differnt part of the project.
+
+    -   \_quarto.yml (Website yml)
+
+    -   index.qmd (Project Write Up)
+
+    -   proposal.qmd (Project Proposal)
+
+    -   presentation.qmd (Project Presentation)
+
+    -   shiny_app.qmd (Shiny App)
+
+    -   about.qmd (About)
+
+-   In addition to the 6 main files, the repo will also contain a folder called EXTRA. Within EXTRA will be two additional folders.
+
+    -   data
+
+        -   data_cleanup.r (Code to clean up data and create cleaned data files)
+
+        -   atla.rda (Cleaned Up Data rda)
+
+        -   atla.csv (Cleaned Up Data csv)
+
+    -   shinyapp
+
+        -   app.r (Shiny App Creation Code)
+
+-   Within the repo, another folder called images will also be used to store any images used on the site.
+
+-   The repo will also contain other necessary files for creating a website using quarto but these will remain untouched.
+
+#### Plan of Attack - Weekly Plan 
+
+-   Week 1
+
+    -   create all necessary files (shiny app folder, data clean up folder, and additional qmd file)
+
+    -   submit project proposal (April 4th)
+
+-   Week 2
+
+    -   peer review proposal (April 8th)
+
+    -   amend proposal following peer reveiew
+
+    -   clean up dataset
+
+    -   complete shiny app creation
+
+    -   implement shiny app into quarto file
+
+-   Week 3
+
+    -   peer review code (April 15th)
+
+    -   amend code following peer reveiew
+
+    -   create presentation of project
+
+-   Week 4
+
+    -   present project ( April 25th/27th)
+
+    -   amend project following presentation feedback
+
+-   Week 5
+
+    -   begin project write up
+
+-   Week 6
+
+    -   completre project write up
+
+    -   submit project write up (May 9th)

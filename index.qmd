@@ -1,7 +1,7 @@
 ---
-title: ""
-subtitle: "Project 2"
-author: ""
+title: "Wan Shi Tong's Library"
+subtitle: "Project Write Up"
+author: "Morgen Kaufman"
 format: html
 editor: visual
 execute:
@@ -13,3 +13,11 @@ execute:
 ## Abstract
 
 ## Introduction
+
+## Approach
+
+[link to shiny app](shiny_app.qmd)
+
+## Analysis 
+
+## Discussion

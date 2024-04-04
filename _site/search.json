@@ -2,37 +2,37 @@
   {
     "objectID": "proposal.html",
     "href": "proposal.html",
-    "title": "Project 2",
+    "title": "Wan Shi Tong’s Library",
     "section": "",
-    "text": "library(tidyverse)"
+    "text": "My goal is to create a sleek and accessible website featuring a complex shiny app which allows users to explore trends across the episodes of Avatar: The Last Airbender."
   },
   {
     "objectID": "proposal.html#dataset",
     "href": "proposal.html#dataset",
-    "title": "Project 2",
+    "title": "Wan Shi Tong’s Library",
     "section": "Dataset",
-    "text": "Dataset\n\n## read data"
+    "text": "Dataset\nThis project will utilize the appa package by Avery Robbins. This package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender. The dataframe includes 13,385 rows and 12 variables.\n\n\n\n\n\n\n\nVariable Name\nDescription\n\n\n\n\nid\nan id number for each row, essentially just a row number\n\n\nbook\nthe name of each book, or season, in the series: Water, Earth, and Fire\n\n\nbook_num\nan id number for each book, 1-3\n\n\nchapter\nthe name of each chapter, or episode, in the series\n\n\nchapter_num\nan id number for each chapter\n\n\ncharacter\nevery character who ever spoke in the series\n\n\nfull_text\nthe words spoken by each character + additional scene descriptions\n\n\ncharacter_words\nthe words spoken by each character\n\n\nscene_description\nthe descriptions of what is happening on screen\n\n\nwriter\nthe writer, or writers, for each episode\n\n\ndirector\nthe director for each episode\n\n\nimdb_rating\nimdb ratings on a scale of 1 to 10"
   },
   {
     "objectID": "proposal.html#reason-for-choosing-this-dataset",
     "href": "proposal.html#reason-for-choosing-this-dataset",
-    "title": "Project 2",
+    "title": "Wan Shi Tong’s Library",
     "section": "Reason for Choosing this Dataset",
-    "text": "Reason for Choosing this Dataset"
+    "text": "Reason for Choosing this Dataset\nFrom the begining, I knew I wanted to explore something popculture related that would also lend itself to performing text analysis. However, my primary motivation for chosing this dataset is somewhat personal. As a child, Avatar was one of my favorite shows and I have very fond childhood memories of watching it. As such, the show holds a very special place in my heart and I thought that being able to explore it in a new way would be fun and provide me with some new information regarding the show. Additionally, this dataset is quite a fun one and differs from most datasets that I have used in the past."
   },
   {
     "objectID": "proposal.html#questions-and-analysis-plan",
     "href": "proposal.html#questions-and-analysis-plan",
-    "title": "Project 2",
+    "title": "Wan Shi Tong’s Library",
     "section": "Questions and Analysis Plan",
-    "text": "Questions and Analysis Plan"
+    "text": "Questions and Analysis Plan\n\nQuestions\n\nHow are lines distributed across episodes?\n\nHow does it differ by character?\nHow does it differ by season?\nHow does it differ by director?\nHow does it differ by character gender?\n\nHow doe IMDB scores change over the course of the show?\n\nWhat is the IMDB score aveage per season?\n\n\n\n\nProject Repo Organization\n\nThis project repo will have 6 main files that will contain the majority of my work. Each file with the excpetion of the yml will corespond to a page on my website and address a differnt part of the project.\n\n_quarto.yml (Website yml)\nindex.qmd (Project Write Up)\nproposal.qmd (Project Proposal)\npresentation.qmd (Project Presentation)\nshiny_app.qmd (Shiny App)\nabout.qmd (About)\n\nIn addition to the 6 main files, the repo will also contain a folder called EXTRA. Within EXTRA will be two additional folders.\n\ndata\n\ndata_cleanup.r (Code to clean up data and create cleaned data files)\natla.rda (Cleaned Up Data rda)\natla.csv (Cleaned Up Data csv)\n\nshinyapp\n\napp.r (Shiny App Creation Code)\n\n\nWithin the repo, another folder called images will also be used to store any images used on the site.\nThe repo will also contain other necessary files for creating a website using quarto but these will remain untouched.\n\n\n\nPlan of Attack - Weekly Plan\n\nWeek 1\n\ncreate all necessary files (shiny app folder, data clean up folder, and additional qmd file)\nsubmit project proposal (April 4th)\n\nWeek 2\n\npeer review proposal (April 8th)\namend proposal following peer reveiew\nclean up dataset\ncomplete shiny app creation\nimplement shiny app into quarto file\n\nWeek 3\n\npeer review code (April 15th)\namend code following peer reveiew\ncreate presentation of project\n\nWeek 4\n\npresent project ( April 25th/27th)\namend project following presentation feedback\n\nWeek 5\n\nbegin project write up\n\nWeek 6\n\ncompletre project write up\nsubmit project write up (May 9th)"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Your project title",
+    "title": "Avatar: The Last Airbender Project",
     "section": "",
-    "text": "This project was developed by XX. For MATH/STAT241 at Reed College. The team is comprised of the following team members."
+    "text": "This project was developed by Morgen Kaufman. For MATH/STAT241 at Reed College."
   },
   {
     "objectID": "index.html",
@@ -44,8 +44,71 @@
   {
     "objectID": "index.html#introduction",
     "href": "index.html#introduction",
-    "title": "",
+    "title": "Wan Shi Tong’s Library",
     "section": "Introduction",
     "text": "Introduction"
+  },
+  {
+    "objectID": "proposal.html#goals",
+    "href": "proposal.html#goals",
+    "title": "Wan Shi Tong’s Library",
+    "section": "",
+    "text": "My goal is to create a sleek and accessible website featuring a complex shiny app which allows users to explore trends across the episodes of Avatar: The Last Airbender."
+  },
+  {
+    "objectID": "index.html#approach",
+    "href": "index.html#approach",
+    "title": "Wan Shi Tong’s Library",
+    "section": "Approach",
+    "text": "Approach\nlink to shiny app"
+  },
+  {
+    "objectID": "index.html#analysis",
+    "href": "index.html#analysis",
+    "title": "Wan Shi Tong’s Library",
+    "section": "Analysis",
+    "text": "Analysis"
+  },
+  {
+    "objectID": "index.html#discussion",
+    "href": "index.html#discussion",
+    "title": "Wan Shi Tong’s Library",
+    "section": "Discussion",
+    "text": "Discussion"
+  },
+  {
+    "objectID": "shiny_app.html",
+    "href": "shiny_app.html",
+    "title": "Avatar: The Last Airbender Project",
+    "section": "",
+    "text": "My goal is to create a sleek and accessible website featuring a complex shiny app which allows users to explore line trends across the episodes of Avatar: The Last Airbender."
+  },
+  {
+    "objectID": "shiny_app.html#goals",
+    "href": "shiny_app.html#goals",
+    "title": "Avatar: The Last Airbender Project",
+    "section": "",
+    "text": "My goal is to create a sleek and accessible website featuring a complex shiny app which allows users to explore line trends across the episodes of Avatar: The Last Airbender."
+  },
+  {
+    "objectID": "shiny_app.html#dataset",
+    "href": "shiny_app.html#dataset",
+    "title": "Avatar: The Last Airbender Project",
+    "section": "Dataset",
+    "text": "Dataset\nThis project will utilize the appa package by Avery Robbins. This package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender. The dataframe includes 13,385 rows and 12 variables.\n\n\n\n\n\n\n\nVariable Name\nDescription\n\n\n\n\nid\nan id number for each row, essentially just a row number\n\n\nbook\nthe name of each book, or season, in the series: Water, Earth, and Fire\n\n\nbook_num\nan id number for each book, 1-3\n\n\nchapter\nthe name of each chapter, or episode, in the series\n\n\nchapter_num\nan id number for each chapter\n\n\ncharacter\nevery character who ever spoke in the series\n\n\nfull_text\nthe words spoken by each character + additional scene descriptions\n\n\ncharacter_words\nthe words spoken by each character\n\n\nscene_description\nthe descriptions of what is happening on screen\n\n\nwriter\nthe writer, or writers, for each episode\n\n\ndirector\nthe director for each episode\n\n\nimdb_rating\nimdb ratings on a scale of 1 to 10"
+  },
+  {
+    "objectID": "shiny_app.html#reason-for-choosing-this-dataset",
+    "href": "shiny_app.html#reason-for-choosing-this-dataset",
+    "title": "Avatar: The Last Airbender Project",
+    "section": "Reason for Choosing this Dataset",
+    "text": "Reason for Choosing this Dataset"
+  },
+  {
+    "objectID": "shiny_app.html#questions-and-analysis-plan",
+    "href": "shiny_app.html#questions-and-analysis-plan",
+    "title": "Avatar: The Last Airbender Project",
+    "section": "Questions and Analysis Plan",
+    "text": "Questions and Analysis Plan\n\nHow are lines distrubuted across episodes\n\nA one to two paragraph description of your goals, including your motivation. Depending on the focus of your project, the following might go in here.\n\n\n\nIf using particular dataset(s), a brief description of each dataset including the reason why you chose the particular dataset, its dataset, its dimensions and any other relevant metadata. (Make sure to load the data and use inline code for some of this information.)\nIf answering a particular research question, the question itself and the reason why you chose this question.\n\nA weekly “plan of attack” outlining your steps to complete your project and including the team member(s) assigned to that task.\nThe final organization of your project repository. This means describing the project organization in your proposal as well as implementing that organization in your repo. Create any folders needed and place a README.md in each folder explaining what goes in there."
   }
 ]
