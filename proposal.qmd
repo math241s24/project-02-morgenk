@@ -40,7 +40,7 @@ atla <- appa::appa
 This project will utilize the [appa package](https://github.com/averyrobbins1/appa) by [Avery Robbins](https://github.com/averyrobbins1). This package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender. The dataframe includes 13,385 rows and 12 variables.
 
 | Variable Name     | Description                                                             |
-|------------------|------------------------------------------------------|
+|-------------------|-------------------------------------------------------------------------|
 | id                | an id number for each row, essentially just a row number                |
 | book              | the name of each book, or season, in the series: Water, Earth, and Fire |
 | book_num          | an id number for each book, 1-3                                         |
