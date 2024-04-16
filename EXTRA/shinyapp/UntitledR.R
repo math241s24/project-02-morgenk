@@ -10,7 +10,6 @@ ui <- fluidPage(
   titlePanel("Title"),
   sidebarLayout(
     sidebarPanel(
-      selectInput("character", "Select Character", choices = as.vector(unique(atla$character)),  selected = "Aang"),
       selectInput("director", "Select Director", choices = c("All Directors", unique(atla$director)), multiple = TRUE, selected = "All Directors"),
       actionButton("updateBtn", "Update Results!")
     ),
@@ -28,24 +27,22 @@ server <- function(input, output) {
 
   output$plot <- renderPlotly({
     filtered_data <- atla %>%
-      filter(character %in% input$character,
-             if ("All Directors" %in% input$director) TRUE else director %in% input$director)
+      filter(if ("All Directors" %in% input$director) TRUE else director %in% input$director)
     
     plot <- ggplot(filtered_data %>%
                   mutate(Book = factor(Book, levels = c('Water', 'Earth', 'Fire'))), 
-                  aes(x = Episode, y = Lines, color = Book, text = director)) +
+                  aes(x = Episode, y = imdb_rating, color = Book, text = director)) +
       geom_point() + 
       geom_line() +
       labs(x = "Episode Number",
-           y = "Number of Lines Per Episode",
+           y = "Number of Per Episode",
            color = "Book (season)") +
       scale_color_manual(values = book_colors, breaks = c("Water", "Earth", "Fire"), limits = c("Water", "Earth", "Fire")) +
-      coord_cartesian(xlim = c(0, max(atla$Episode)), ylim = c(0, max(atla$Lines))) + 
+      coord_cartesian(xlim = c(0, max(atla$Episode)), ylim = c(5, 10)) + 
       scale_x_continuous(breaks = seq(0, 60, by = 10)) + 
-      scale_y_continuous(breaks = seq(0, max(atla$Lines), by = 10)) +
-      aes(text = NULL)
-  
-plot
+      scale_y_continuous(breaks = seq(5, max(10, by = 1)))
+      
+      ggplotly(plot)
 
   })
 }
