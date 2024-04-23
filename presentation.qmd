@@ -1,10 +1,12 @@
 ---
-title: "Project title"
+title: "Wan Shi Tong's Library"
 subtitle: "Project 2"
-author: "Team"
+author: "Morgen Kaufman"
 title-slide-attributes:
   data-slide-number: none
-format: revealjs
+format:
+  revealjs: 
+    theme: solarized
 editor: visual
 execute:
   echo: false
@@ -14,7 +16,13 @@ execute:
 #| label: load-packages
 #| include: false
 
+library(ggplot2)
+library(dplyr)
+library(readr)
+library(RColorBrewer)
 library(tidyverse)
+library(knitr)
+library(kableExtra)
 ```
 
 ```{r}
@@ -34,4 +42,128 @@ knitr::opts_chunk$set(
 ```{r}
 #| label: load-data
 #| include: false
+
+atla <- read_csv("~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
 ```
+
+## Intoduction {.smaller}
+
+-   This project will utilize the [appa package](https://github.com/averyrobbins1/appa) by [Avery Robbins](https://github.com/averyrobbins1)
+
+-   This package includes a dataset containing the script, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender
+
+-   The dataframe includes 13,385 rows and 12 variables
+
+-   The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions)
+
+-   The show consists of 61 episodes and 3 books (seasons)
+
+## Questions
+
+-   How are lines distributed across episodes?
+
+    -   How does it differ by character?
+
+    -   How does it differ by season?
+
+    -   How does it differ by director?
+
+-   How doe IMDB scores change over the course of the show?
+
+    -   What is the IMDB score average per season?
+
+## Approach
+
+To answer these questions, I created two shiny apps that allow users to explore the dataset. Additionally I have generated some summary statistics that allow for easy exploration of the data. To do this I first did some data wrangling which removed scene descriptions and split lines spoken by multiple characters. Then a new column called "episode" was created which assigns each episode acorss all seasons a corresponding number 1-61 (in the origional set the numbers reset for each season). Next the data was grouped by chcracter and episode to calculate another colomn called "lines" which calculates the sum of rows for each charavter in each episode, this allows for us to now have a numeric variable for the number of lines spoken by character. This data was then imported into a shiny app which is an interactive scatter and line plot that allows for filtering by characters, directors, and seasons. Along the x axis is the episode number (1-61) and the y axis is the line count (0- The same kind of app was created for
+
+-   for the purpose of this project all scene descriptions have been removed and lines spoken by multiple characters have been split accordingly
+
+## Shiny Apps
+
+::: panel-tabset
+### App 1 - Character Lines
+
+### App 2 - IMDB
+:::
+
+## Summary Statistics
+
+::: panel-tabset
+### Line Stats
+
+```{r, echo=FALSE, eval=FALSE}
+all_episode_counts <- atla %>%
+  group_by(Episode, character) %>%
+  summarise(count = n())
+
+all_book_counts <- atla %>%
+  group_by(book_num, character) %>%
+  summarise(count = n())
+
+all_episode_counts %>%
+  group_by(Episode) %>%
+  summarise(total = sum(count)) %>%
+  arrange(desc(total))
+
+
+all_book_counts %>%
+  group_by(book_num) %>%
+  summarise(total = sum(count)) %>%
+  arrange(desc(total))
+```
+
+Most Lines by one character in one episode: Jet - 74 (ep 10)
+
+Most total lines in one episode: Episode 14 with a total of 248 followed by episode 10 with 242
+
+Season line breakdown:
+
+-   Book 1 - Water : 3501
+
+-   Book 2 - Earth : 3322
+
+-   Book 3 - Fire : 3187
+
+### IMDB Satistics
+
+```{r, echo=FALSE}
+summary_stats <- atla %>%
+  summarise(
+    Mean = mean(IMDB, na.rm = TRUE),
+    Median = median(IMDB, na.rm = TRUE),
+    Min = min(IMDB, na.rm = TRUE),
+    Max = max(IMDB, na.rm = TRUE),
+    SD = sd(IMDB, na.rm = TRUE),
+    Episodes = n_distinct(Episode)
+  ) %>%
+  mutate(director = "All")
+
+summary_stats2 <- atla %>%
+  group_by(director) %>%
+  summarise(
+    Mean = mean(IMDB, na.rm = TRUE),
+    Median = median(IMDB, na.rm = TRUE),
+    Min = min(IMDB, na.rm = TRUE),
+    Max = max(IMDB, na.rm = TRUE),
+    SD = sd(IMDB, na.rm = TRUE),
+    Episodes = n_distinct(Episode)
+  )
+
+stats_all <- bind_rows(summary_stats, summary_stats2)
+
+stats_all_round <- stats_all %>%
+  mutate(
+    Mean = round(Mean, digits = 2),
+    SD = round(SD, digits = 2)) %>%
+  rename(Director = director)
+
+
+print(kable(stats_all_round, align = "c", "simple"))
+
+
+```
+:::
+
+## Conclusions
+
+## Limitations

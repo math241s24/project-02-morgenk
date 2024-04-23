@@ -16,6 +16,9 @@ eps <- appa %>%
   mutate(Episode = row_number())
 
 atla <- left_join(character_count, eps, by = "chapter") %>%
-  arrange(desc(character_count))
+  group_by(character) %>%
+  mutate(sum(Lines)) %>%
+  mutate("IMDB" = imdb_rating) %>%
+  arrange(desc(Lines))
  
-write_csv(atla, "EXTRA/data/atla.csv")
+write_csv(atla, "~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")

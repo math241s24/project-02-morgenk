@@ -16,8 +16,6 @@ execute:
 
 ## Approach
 
-[link to shiny app](shiny_app.qmd)
-
-## Analysis 
+## Analysis
 
 ## Discussion
