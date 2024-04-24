@@ -1,0 +1,12 @@
+name: shinyapp
+title: shinyapp
+username: 2s3kzj-morgen-k
+account: 2s3kzj-morgen-k
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11848057
+bundleId: 8537238
+url: https://2s3kzj-morgen-k.shinyapps.io/shinyapp/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

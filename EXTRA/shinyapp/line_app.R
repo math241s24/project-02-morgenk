@@ -7,8 +7,9 @@ library(RColorBrewer)
 library(tidyverse)
 library(stringr)
 library(DT)
+library(rsconnect)
 
-atla <- read_csv("~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
+atla <- read_csv("atla.csv")
 
 ui <- fluidPage(
   titlePanel("Avatar: The Last Airbender Character Line Analysis"),
@@ -61,7 +62,8 @@ server <- function(input, output) {
     
     plot <- plot +
       labs(x = "Episode Number",
-           y = "Number of Lines Per Episode",
+           y = "Number of Lines",
+           title = "Number of Lines Per Episode",
            color = if (length(input$character) == 1) "Book (season)" else "Character") +
       coord_cartesian(xlim = c(0, max(filtered_data$Episode)), ylim = c(0, max(filtered_data$Lines))) + 
       scale_x_continuous(breaks = seq(0, 61, by = 10)) + 

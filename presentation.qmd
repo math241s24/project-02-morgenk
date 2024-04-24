@@ -23,6 +23,8 @@ library(RColorBrewer)
 library(tidyverse)
 library(knitr)
 library(kableExtra)
+library(gridExtra)
+library(grid)
 ```
 
 ```{r}
@@ -50,13 +52,15 @@ atla <- read_csv("~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
 
 -   This project will utilize the [appa package](https://github.com/averyrobbins1/appa) by [Avery Robbins](https://github.com/averyrobbins1)
 
--   This package includes a dataset containing the script, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender
+-   This package includes a dataset containing the script, writers, directors, and IMDB ratings of every episode of the early 2000s animated TV show Avatar: The Last Airbender
 
 -   The dataframe includes 13,385 rows and 12 variables
 
 -   The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions)
 
 -   The show consists of 61 episodes and 3 books (seasons)
+
+    ![](images/avatar-the-last-airbender-appa-512x512.png){width="200"}
 
 ## Questions
 
@@ -72,59 +76,88 @@ atla <- read_csv("~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
 
     -   What is the IMDB score average per season?
 
-## Approach
+## Approach {.smaller}
 
-To answer these questions, I created two shiny apps that allow users to explore the dataset. Additionally I have generated some summary statistics that allow for easy exploration of the data. To do this I first did some data wrangling which removed scene descriptions and split lines spoken by multiple characters. Then a new column called "episode" was created which assigns each episode acorss all seasons a corresponding number 1-61 (in the origional set the numbers reset for each season). Next the data was grouped by chcracter and episode to calculate another colomn called "lines" which calculates the sum of rows for each charavter in each episode, this allows for us to now have a numeric variable for the number of lines spoken by character. This data was then imported into a shiny app which is an interactive scatter and line plot that allows for filtering by characters, directors, and seasons. Along the x axis is the episode number (1-61) and the y axis is the line count (0- The same kind of app was created for
-
--   for the purpose of this project all scene descriptions have been removed and lines spoken by multiple characters have been split accordingly
+To answer these questions, I created two shiny apps that allow users to explore the dataset. Additionally I have generated some summary statistics that allow for easy exploration of the data. To do this I first did some data wrangling which removed scene descriptions and split lines spoken by multiple characters. Then a new column called "episode" was created which assigns each episode across all seasons a corresponding number 1-61 (in the original set the numbers reset for each season). Next the data was grouped by character and episode to calculate another column called "lines" which calculates the sum of rows for each character in each episode, this allows for us to now have a numeric variable for the number of lines spoken by character. This data was then imported into a shiny app which is an interactive scatter and line plot that allows for filtering by characters, directors, and seasons. Along the x axis is the episode number (1-61) and the y axis is the line count. The same kind of app was created for IMDB exploration with IMDB score on the y axis and the character filter removed. The apps were made to allow for users to explore a wide range of available data. The plots were created using a combination of ggplot and plotly to allow for interactive line tracing and point highlighting as well as zoom features.
 
 ## Shiny Apps
 
 ::: panel-tabset
 ### App 1 - Character Lines
 
+[![](images/newplot-2.png)](https://2s3kzj-morgen-k.shinyapps.io/shinyapp/)
+
 ### App 2 - IMDB
+
+[![](images/newplot.png)](https://2s3kzj-morgen-k.shinyapps.io/shinyapp/)
 :::
 
-## Summary Statistics
+## Summary Statistics - Lines
 
 ::: panel-tabset
 ### Line Stats
 
-```{r, echo=FALSE, eval=FALSE}
+```{r, echo=FALSE, fig.align = "center"}
 all_episode_counts <- atla %>%
   group_by(Episode, character) %>%
   summarise(count = n())
 
-all_book_counts <- atla %>%
-  group_by(book_num, character) %>%
-  summarise(count = n())
-
-all_episode_counts %>%
+all_episode_counts <- all_episode_counts %>%
   group_by(Episode) %>%
   summarise(total = sum(count)) %>%
   arrange(desc(total))
 
 
-all_book_counts %>%
+all_book_counts <- atla %>%
+  group_by(book_num, character) %>%
+  summarise(count = n())
+
+all_book_counts <- all_book_counts %>%
   group_by(book_num) %>%
   summarise(total = sum(count)) %>%
   arrange(desc(total))
+
+all_sum <- all_episode_counts %>%
+  summarise(
+    Mean = mean(total),
+    Median = median(total),
+    Min = min(total),
+    Max = max(total),
+    SD = sd(total))
+
+print(kable(all_sum, align = "c", "simple"))
 ```
 
-Most Lines by one character in one episode: Jet - 74 (ep 10)
-
-Most total lines in one episode: Episode 14 with a total of 248 followed by episode 10 with 242
+Top episodes are ep 14 (248 lines) and ep 10 (242 lines)
 
 Season line breakdown:
 
--   Book 1 - Water : 3501
+-   Book 1 - Water : 3,501
 
--   Book 2 - Earth : 3322
+-   Book 2 - Earth : 3,322
 
--   Book 3 - Fire : 3187
+-   Book 3 - Fire : 3,187
 
-### IMDB Satistics
+### Line Stats (cont.)
+
+```{r, echo=FALSE, fig.align = "center"}
+all_episode_counts %>% 
+  ggplot(aes(x = Episode, y = total)) +
+  geom_point(color = "blue", size = 2) +
+  geom_line(color = "darkblue") +
+  geom_smooth() + 
+  labs(x = "Episode",
+       y = "Total Lines",
+       title = "Total Lines per Episode") +
+  scale_x_continuous(breaks = seq(0, 61, by = 5)) +
+  theme_minimal() 
+```
+:::
+
+## IMDB Satistics
+
+::: panel-tabset
+### Director IMDB
 
 ```{r, echo=FALSE}
 summary_stats <- atla %>%
@@ -160,10 +193,53 @@ stats_all_round <- stats_all %>%
 
 print(kable(stats_all_round, align = "c", "simple"))
 
+```
 
+### Season IMDB
+
+```{r}
+summary_stats3 <- atla %>%
+  group_by(Book, book_num) %>%
+  summarise(
+    Mean = mean(IMDB, na.rm = TRUE),
+    Median = median(IMDB, na.rm = TRUE),
+    Min = min(IMDB, na.rm = TRUE),
+    Max = max(IMDB, na.rm = TRUE),
+    SD = sd(IMDB, na.rm = TRUE),
+    Episodes = n_distinct(Episode)
+  ) %>%
+  arrange(book_num)
+
+book_stats <- summary_stats3 %>%
+  mutate(
+    Mean = round(Mean, digits = 2),
+    SD = round(SD, digits = 2) )%>%
+  rename("Book #" = book_num)
+
+
+print(kable(book_stats, align = "c", "simple"))
 ```
 :::
 
-## Conclusions
-
 ## Limitations
+
+the main limitation of this project is that there is no marking made for character and director gender identity. Initially this was something that I wished to explore as well but due to the time commitment of having to manually create a new variable I was unable to accomplish this task. Additionally, I also had wanted to explore characters per line / line length but this was again a time issue.
+
+## Conclusions {.smaller}
+
+-   As the show progressed, the number of lines per season dropped although only marginally there is a slight downward trend.
+
+```{=html}
+<!-- -->
+```
+-   In the case of the main characters (Aang, Sokka, and Katara) there is a general trend of the number of lines for the character to spike in the middle / later end of a season with a drop towards the very end of the season. S Additionally the number of lines fluctuates from episode to episode with no clear observable trend.
+
+```{=html}
+<!-- -->
+```
+-   Through looking at some characters such as Azula, Toph, and Zuko, we can pinpoint key episodes in which the character likely played a large role by looking at the line trend.
+
+```{=html}
+<!-- -->
+```
+-   Critics love ATLA. As we can see by the season breakdown of IMDB scores, the lowest rating the show ever got was a 7.1, with some of the highest ratings reaching almost a full 10 (perfect score). Additionally the director did not seem to have any direct correlation to the IMDB rating.

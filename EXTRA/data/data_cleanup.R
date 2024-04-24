@@ -22,3 +22,4 @@ atla <- left_join(character_count, eps, by = "chapter") %>%
   arrange(desc(Lines))
  
 write_csv(atla, "~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
+write_csv(atla, "~/Desktop/Data/project-02-morgenk/EXTRA/shinyapp/atla.csv")

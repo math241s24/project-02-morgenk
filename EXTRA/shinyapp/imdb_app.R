@@ -7,7 +7,7 @@ library(RColorBrewer)
 library(tidyverse)
 library(stringr)
 
-atla <- read_csv("~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
+atla <- read_csv("atla.csv")
 
 ui <- fluidPage(
   titlePanel("Avatar: The Last Airbender IMDB Analysis"),
@@ -55,7 +55,8 @@ server <- function(input, output, session) {
     plot <- plot +
       labs(x = "Episode Number",
            y = "Episode IMDB Score",
-           color = if (length(input$director) == 1) "Book (season)" else "Character") +
+           color = if (length(input$director) == 1) "Book (season)" else "Character",
+           title = "IMDB Rating per Episode") +
       coord_cartesian(xlim = c(0, max(filtered_data$Episode)), ylim = c(5, 10)) + 
       scale_x_continuous(breaks = seq(0, 61, by = 10)) + 
       scale_y_continuous(breaks = seq(5, 10, by = 1))

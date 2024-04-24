@@ -1,0 +1,12 @@
+name: atla_shiny
+title: atla_shiny
+username: 2s3kzj-morgen-k
+account: 2s3kzj-morgen-k
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 11847364
+bundleId: 8533898
+url: https://2s3kzj-morgen-k.shinyapps.io/atla_shiny/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

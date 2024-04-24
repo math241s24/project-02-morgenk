@@ -341,13 +341,11 @@ Morgen Kaufman
 <h2>Intoduction</h2>
 <ul>
 <li><p>This project will utilize the <a href="https://github.com/averyrobbins1/appa">appa package</a> by <a href="https://github.com/averyrobbins1">Avery Robbins</a></p></li>
-<li><p>This package includes a dataset containing the script, writers, directors, and IMDB ratings of every episode of the early 2000s animated tv show Avatar: The Last Airbender</p></li>
+<li><p>This package includes a dataset containing the script, writers, directors, and IMDB ratings of every episode of the early 2000s animated TV show Avatar: The Last Airbender</p></li>
 <li><p>The dataframe includes 13,385 rows and 12 variables</p></li>
-<li><p>The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions)</p>
-<ul>
-<li>for the purpose of this project all scene descriptions have been removed and lines spoken by multiple characters have been split accordingly</li>
-</ul></li>
-<li><p>The show consists of 61 episodes and 3 books (seasons)</p></li>
+<li><p>The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions)</p></li>
+<li><p>The show consists of 61 episodes and 3 books (seasons)</p>
+<p><img data-src="images/avatar-the-last-airbender-appa-512x512.png" width="200"></p></li>
 </ul>
 </section>
 <section id="questions" class="slide level2">
@@ -365,9 +363,9 @@ Morgen Kaufman
 </ul></li>
 </ul>
 </section>
-<section id="approach" class="slide level2">
+<section id="approach" class="slide level2 smaller">
 <h2>Approach</h2>
-<p>To answer these questions, I created two shiny apps that allow users to explore the dataset.</p>
+<p>To answer these questions, I created two shiny apps that allow users to explore the dataset. Additionally I have generated some summary statistics that allow for easy exploration of the data. To do this I first did some data wrangling which removed scene descriptions and split lines spoken by multiple characters. Then a new column called “episode” was created which assigns each episode across all seasons a corresponding number 1-61 (in the original set the numbers reset for each season). Next the data was grouped by character and episode to calculate another column called “lines” which calculates the sum of rows for each character in each episode, this allows for us to now have a numeric variable for the number of lines spoken by character. This data was then imported into a shiny app which is an interactive scatter and line plot that allows for filtering by characters, directors, and seasons. Along the x axis is the episode number (1-61) and the y axis is the line count. The same kind of app was created for IMDB exploration with IMDB score on the y axis and the character filter removed. The apps were made to allow for users to explore a wide range of available data. The plots were created using a combination of ggplot and plotly to allow for interactive line tracing and point highlighting as well as zoom features.</p>
 </section>
 <section id="shiny-apps" class="slide level2">
 <h2>Shiny Apps</h2>
@@ -375,30 +373,65 @@ Morgen Kaufman
 <ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">App 1 - Character Lines</a></li><li><a href="#tabset-1-2">App 2 - IMDB</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
-
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="https://2s3kzj-morgen-k.shinyapps.io/shinyapp/"><img data-src="images/newplot-2.png"></a></p>
+</figure>
+</div>
 </div>
 <div id="tabset-1-2">
-
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><a href="https://2s3kzj-morgen-k.shinyapps.io/shinyapp/"><img data-src="images/newplot.png"></a></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 </section>
-<section id="summary-statistics" class="slide level2">
-<h2>Summary Statistics</h2>
+<section id="summary-statistics---lines" class="slide level2">
+<h2>Summary Statistics - Lines</h2>
 <div class="panel-tabset">
-<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Character Line Stats</a></li><li><a href="#tabset-2-2">IMDB Satistics</a></li></ul>
+<ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Line Stats</a></li><li><a href="#tabset-2-2">Line Stats (cont.)</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1">
-<p>Most Lines by one character in one episode: Jet - 74 (ep 10)</p>
-<p>Most total lines in one episode: Episode 14 with a total of 248 followed by episode 10 with 242</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+   Mean      Median    Min    Max       SD    
+----------  --------  -----  -----  ----------
+ 164.0984     168      65     248    34.62884 </code></pre>
+</div>
+</div>
+<p>Top episodes are ep 14 (248 lines) and ep 10 (242 lines)</p>
 <p>Season line breakdown:</p>
 <ul>
-<li><p>Book 1 - Water : 3501</p></li>
-<li><p>Book 2 - Earth : 3322</p></li>
-<li><p>Book 3 - Fire : 3187</p></li>
+<li><p>Book 1 - Water : 3,501</p></li>
+<li><p>Book 2 - Earth : 3,322</p></li>
+<li><p>Book 3 - Fire : 3,187</p></li>
 </ul>
 </div>
 <div id="tabset-2-2">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="presentation_files/figure-revealjs/unnamed-chunk-5-1.png" style="width:70.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="imdb-satistics" class="slide level2">
+<h2>IMDB Satistics</h2>
+<div class="panel-tabset">
+<ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Director IMDB</a></li><li><a href="#tabset-3-2">Season IMDB</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -416,14 +449,43 @@ Morgen Kaufman
 </div>
 </div>
 </div>
+<div id="tabset-3-2">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+ Book     Book #    Mean    Median    Min    Max     SD     Episodes 
+-------  --------  ------  --------  -----  -----  ------  ----------
+ Water      1       8.27     8.2      7.1    9.4    0.51       20    
+ Earth      2       8.73     8.8      7.5    9.6    0.51       20    
+ Fire       3       8.85     8.9      7.8    9.8    0.51       21    </code></pre>
 </div>
 </div>
-</section>
-<section id="conclusions" class="slide level2">
-<h2>Conclusions</h2>
+</div>
+</div>
+</div>
 </section>
 <section id="limitations" class="slide level2">
 <h2>Limitations</h2>
+<p>the main limitation of this project is that there is no marking made for character and director gender identity. Initially this was something that I wished to explore as well but due to the time commitment of having to manually create a new variable I was unable to accomplish this task. Additionally, I also had wanted to explore characters per line / line length but this was again a time issue.</p>
+</section>
+<section id="conclusions" class="slide level2 smaller">
+<h2>Conclusions</h2>
+<ul>
+<li>As the show progressed, the number of lines per season dropped although only marginally there is a slight downward trend.</li>
+</ul>
+<!-- -->
+<ul>
+<li>In the case of the main characters (Aang, Sokka, and Katara) there is a general trend of the number of lines for the character to spike in the middle / later end of a season with a drop towards the very end of the season. S Additionally the number of lines fluctuates from episode to episode with no clear observable trend.</li>
+</ul>
+<!-- -->
+<ul>
+<li>Through looking at some characters such as Azula, Toph, and Zuko, we can pinpoint key episodes in which the character likely played a large role by looking at the line trend.</li>
+</ul>
+<!-- -->
+<ul>
+<li>Critics love ATLA. As we can see by the season breakdown of IMDB scores, the lowest rating the show ever got was a 7.1, with some of the highest ratings reaching almost a full 10 (perfect score). Additionally the director did not seem to have any direct correlation to the IMDB rating.</li>
+</ul>
 
 <div class="footer footer-default">
 

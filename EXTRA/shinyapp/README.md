@@ -1,1 +1,1 @@
-#folder for shiny app creation
+#folder for shiny apps (includes files for each app and a joint shiny dashboard)
