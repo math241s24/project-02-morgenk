@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -124,11 +158,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a></li>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis">Analysis</a></li>
+  <li><a href="#apps-and-visualizations" id="toc-apps-and-visualizations" class="nav-link" data-scroll-target="#apps-and-visualizations">Apps and Visualizations</a>
+  <ul class="collapse">
+  <li><a href="#apps" id="toc-apps" class="nav-link" data-scroll-target="#apps">Apps</a></li>
+  <li><a href="#line-summary-statistics" id="toc-line-summary-statistics" class="nav-link" data-scroll-target="#line-summary-statistics">Line Summary Statistics</a></li>
+  <li><a href="#imdb-summary-statistics" id="toc-imdb-summary-statistics" class="nav-link" data-scroll-target="#imdb-summary-statistics">IMDB Summary Statistics</a></li>
+  </ul></li>
   <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a></li>
   </ul>
 </nav>
     </div>
@@ -159,20 +198,473 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="abstract" class="level2">
-<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
-</section>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this project, I sought to answer a number of questions regarding the 2000s children’s TV show Avatar: The Last Airbender. How are lines distributed across episodes? How does it differ by character? How does it differ by season? How does it differ by director? How do IMDB scores change over the course of the show? What is the IMDB score average per season? To answer these questions, I used the<a href="https://github.com/averyrobbins1/appa">appa package</a> by<a href="https://github.com/averyrobbins1">Avery Robbins</a>. The purpose of this package is to “provide an easy way to share Avatar: The Last Airbender transcript data.” The package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the show. The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions). The show consists of 61 episodes and 3 books (seasons). The data frame includes 13,385 rows and 12 variables. The included variables are as follows:&nbsp;</p>
+<table class="table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 69%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variable Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>id</td>
+<td>an id number for each row, essentially just a row number</td>
+</tr>
+<tr class="even">
+<td>book</td>
+<td>the name of each book, or season, in the series: Water, Earth, and Fire</td>
+</tr>
+<tr class="odd">
+<td>book_num</td>
+<td>an id number for each book, 1-3</td>
+</tr>
+<tr class="even">
+<td>chapter</td>
+<td>the name of each chapter, or episode, in the series</td>
+</tr>
+<tr class="odd">
+<td>chapter_num</td>
+<td>an id number for each chapter</td>
+</tr>
+<tr class="even">
+<td>character</td>
+<td>every character who ever spoke in the series</td>
+</tr>
+<tr class="odd">
+<td>full_text</td>
+<td>the words spoken by each character + additional scene descriptions</td>
+</tr>
+<tr class="even">
+<td>character_words</td>
+<td>the words spoken by each character</td>
+</tr>
+<tr class="odd">
+<td>scene_description</td>
+<td>the descriptions of what is happening on screen</td>
+</tr>
+<tr class="even">
+<td>writer</td>
+<td>the writer, or writers, for each episode</td>
+</tr>
+<tr class="odd">
+<td>director</td>
+<td>the director for each episode</td>
+</tr>
+<tr class="even">
+<td>imdb_rating</td>
+<td>imdb ratings on a scale of 1 to 10</td>
+</tr>
+</tbody>
+</table>
+<p>However, for this project, I used a new dataset created by wrangling the appa data.</p>
+<p>To do this I first did some data wrangling which removed scene descriptions and split lines spoken by multiple characters. Then a new column called “episode” was created which assigns each episode across all seasons a corresponding number 1-61 (in the original set the numbers reset for each season). Next, the data was grouped by character and episode to calculate another column called “lines” which calculates the sum of rows for each character in each episode, this allows for us to now have a numeric variable for the number of lines spoken by a character. This new, modified dataset is called “atla” and will be the primary dataset for this project. The newly created atla data frame includes 10010 observations and 13 variables.</p>
 </section>
 <section id="approach" class="level2">
 <h2 class="anchored" data-anchor-id="approach">Approach</h2>
+<p>To answer these questions, I created two shiny apps that allow users to explore the dataset. Additionally, I have also generated some summary statistics that allow for easy exploration of the data. The first shiny app is an interactive scatter and line plot that allows for filtering by characters, directors, and seasons. Along the x-axis is the episode number (1-61) and the y-axis is the line count. The same kind of app was created for IMDB exploration with the IMDB score on the y-axis and the character filter removed. The apps were made to allow users to explore a wide range of available data. The plots were created using a combination of ggplot and plotly to allow for interactive line tracing and point highlighting as well as zoom features.</p>
 </section>
-<section id="analysis" class="level2">
-<h2 class="anchored" data-anchor-id="analysis">Analysis</h2>
+<section id="apps-and-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="apps-and-visualizations">Apps and Visualizations</h2>
+<section id="apps" class="level3">
+<h3 class="anchored" data-anchor-id="apps">Apps</h3>
+<p>Apps can be found <a href="https://2s3kzj-morgen-k.shinyapps.io/shinyapp/">here</a>!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://2s3kzj-morgen-k.shinyapps.io/shinyapp/"><img src="images/newplot-2.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</section>
+<section id="line-summary-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="line-summary-statistics">Line Summary Statistics</h3>
+<section id="number-of-lines" class="level4">
+<h4 class="anchored" data-anchor-id="number-of-lines">Number of Lines</h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+   Mean      Median    Min    Max       SD    
+----------  --------  -----  -----  ----------
+ 164.0984     168      65     248    34.62884 </code></pre>
+</div>
+</div>
+</section>
+<section id="season-line-breakdown" class="level4">
+<h4 class="anchored" data-anchor-id="season-line-breakdown">Season line breakdown</h4>
+<ul>
+<li><p>Book 1 - Water : 3,501</p></li>
+<li><p>Book 2 - Earth : 3,322</p></li>
+<li><p>Book 3 - Fire : 3,187</p></li>
+</ul>
+<p>Top episodes are ep 14 (248 lines) and ep 10 (242 lines)</p>
+</section>
+<section id="aggregate-line-visualization" class="level4">
+<h4 class="anchored" data-anchor-id="aggregate-line-visualization">Aggregate Line Visualization</h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="imdb-summary-statistics" class="level3">
+<h3 class="anchored" data-anchor-id="imdb-summary-statistics">IMDB Summary Statistics</h3>
+<section id="director-imdb" class="level4">
+<h4 class="anchored" data-anchor-id="director-imdb">Director IMDB</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+ Mean    Median    Min    Max     SD     Episodes           Director         
+------  --------  -----  -----  ------  ----------  -------------------------
+ 8.62     8.6      7.1    9.8    0.57       61                 All           
+ 8.09     8.0      8.0    8.2    0.10       2             Anthony Lioi       
+ 8.09     8.0      7.8    9.1    0.33       8              Dave Filoni       
+ 8.72     8.6      7.8    9.5    0.50       12           Ethan Spaulding     
+ 8.60     8.7      7.1    9.5    0.57       19           Giancarlo Volpe     
+ 8.96     8.9      8.4    9.8    0.47       8          Joaquim Dos Santos    
+ 8.68     8.7      7.5    9.5    0.54       11          Lauren MacMullan     
+ 9.60     9.6      9.6    9.6    0.00       1        Michael Dante DiMartino </code></pre>
+</div>
+</div>
+</section>
+<section id="season-imdb" class="level4">
+<h4 class="anchored" data-anchor-id="season-imdb">Season IMDB</h4>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+
+ Book     Book #    Mean    Median    Min    Max     SD     Episodes 
+-------  --------  ------  --------  -----  -----  ------  ----------
+ Water      1       8.27     8.2      7.1    9.4    0.51       20    
+ Earth      2       8.73     8.8      7.5    9.6    0.51       20    
+ Fire       3       8.85     8.9      7.8    9.8    0.51       21    </code></pre>
+</div>
+</div>
+</section>
+</section>
 </section>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>From these summary statistics and the accompanying apps, we can draw a number of conclusions. Because the purpose of the apps was to allow for maximum customization, it would be too time-consuming to discuss all observations we can gather. As such the following conclusions are not the only things we can gather and more specific explorations (ie a specific character or director) may yield more in-depth information.&nbsp;</p>
+<p>To begin with I would like to discuss the information we can gather from the line-focused portion of this project. Using the line-centered data, we can see that as the show progressed, the number of lines per season dropped although only marginally there is a slight downward trend. This trend however is not strong enough to make any concrete conclusions. We can also see that towards the very end of a season, the number of total lines seems to drop quite drastically. Although this would need further investigation My hypothesis for this is that the season finale episodes may be more action-heavy and thus rely less on dialogue. Additionally, it may be that the number of lines decreases but length of lines increased (ie characters have long monologues). In the case of the main characters (Aang, Sokka, and Katara) there is a general trend of the number of lines for the character to spike in the middle / later end of a season with a drop towards the very end of the season. Given the previous observation regarding total lines, it can also be deduced that the main characters tend to make up the majority of the line count. The exception to this is the character Jet who only makes an appearance in a few episodes but maintains the most number of lines in a single episode (this being episode 10 with 74 lines). The following Jet however, is Aang (the main character) with 73 lines in episode 14. Additionally, the number of lines for characters fluctuates from episode to episode with no clear observable trend. By looking at some characters such as Azula, Toph, and Zuko, we can pinpoint key episodes in which the character likely played a large role by looking at the line trend. We can also see that the director did not have any clear impact on the number of lines any given character had in an episode. As such we may wish to explore the episode writers to see if that variable has an impact on the observations.</p>
+<p>As for IMDB ratings, we can see in the season breakdown of IMDB scores, that the lowest rating the show ever got was 7.1, with some of the highest ratings reaching almost a full 10 (perfect score). Additionally, the director did not seem to have any direct correlation to the IMDB rating. IMDB ratings also overall have a slight upward trend. IMDB ratings also seem to be possibly influenced by the episode’s position in the season with episodes that are placed towards the end of a season having higher ratings than those towards the start.</p>
+<p>The main limitation of this project is that there is no marking made for character and director gender identity. Initially, this was something that I wished to explore as well but due to the time commitment of having to manually create a new variable, I was unable to accomplish this task. Additionally, I also had wanted to explore characters per line/line length but this was again a time issue.</p>
+</section>
+<section id="code" class="level2">
+<h2 class="anchored" data-anchor-id="code">Code</h2>
+<p>Data Wrangling</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>appa <span class="ot">&lt;-</span> appa<span class="sc">::</span>appa</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>character_count <span class="ot">&lt;-</span> appa <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(chapter, character) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">character =</span> <span class="fu">str_split</span>(character, <span class="st">" and "</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(character) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Lines =</span> <span class="fu">n</span>(), id, <span class="at">Book =</span> book, book_num, chapter, chapter_num, writer, director, imdb_rating) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(character <span class="sc">!=</span> <span class="st">"Scene Description"</span>)  </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>eps <span class="ot">&lt;-</span> appa <span class="sc">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(chapter) <span class="sc">%&gt;%</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Episode =</span> <span class="fu">row_number</span>())</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>atla <span class="ot">&lt;-</span> <span class="fu">left_join</span>(character_count, eps, <span class="at">by =</span> <span class="st">"chapter"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(character) <span class="sc">%&gt;%</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">sum</span>(Lines)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">"IMDB"</span> <span class="ot">=</span> imdb_rating) <span class="sc">%&gt;%</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Lines))</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(atla, <span class="st">"~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv"</span>)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(atla, <span class="st">"~/Desktop/Data/project-02-morgenk/EXTRA/shinyapp/atla.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Summary Statistics</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>all_episode_counts <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Episode, character) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>())</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>all_episode_counts <span class="ot">&lt;-</span> all_episode_counts <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Episode) <span class="sc">%&gt;%</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>all_book_counts <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(book_num, character) <span class="sc">%&gt;%</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">count =</span> <span class="fu">n</span>())</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>all_book_counts <span class="ot">&lt;-</span> all_book_counts <span class="sc">%&gt;%</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(book_num) <span class="sc">%&gt;%</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(count)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(total))</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>all_sum <span class="ot">&lt;-</span> all_episode_counts <span class="sc">%&gt;%</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(total),</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">median</span>(total),</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">min</span>(total),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(total),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(total))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">kable</span>(all_sum, <span class="at">align =</span> <span class="st">"c"</span>, <span class="st">"simple"</span>))</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>all_episode_counts <span class="sc">%&gt;%</span> </span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Episode, <span class="at">y =</span> total)) <span class="sc">+</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span> </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Episode"</span>,</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Total Lines"</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Total Lines per Episode"</span>) <span class="sc">+</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">61</span>, <span class="at">by =</span> <span class="dv">5</span>)) <span class="sc">+</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">median</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">min</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">Episodes =</span> <span class="fu">n_distinct</span>(Episode)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">director =</span> <span class="st">"All"</span>)</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>summary_stats2 <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(director) <span class="sc">%&gt;%</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">median</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">min</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">Episodes =</span> <span class="fu">n_distinct</span>(Episode)</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>stats_all <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(summary_stats, summary_stats2)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>stats_all_round <span class="ot">&lt;-</span> stats_all <span class="sc">%&gt;%</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">round</span>(Mean, <span class="at">digits =</span> <span class="dv">2</span>),</span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">round</span>(SD, <span class="at">digits =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Director =</span> director)</span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">kable</span>(stats_all_round, <span class="at">align =</span> <span class="st">"c"</span>, <span class="st">"simple"</span>))</span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>summary_stats3 <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Book, book_num) <span class="sc">%&gt;%</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>    <span class="at">Median =</span> <span class="fu">median</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>    <span class="at">Min =</span> <span class="fu">min</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">Max =</span> <span class="fu">max</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">sd</span>(IMDB, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>    <span class="at">Episodes =</span> <span class="fu">n_distinct</span>(Episode)</span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(book_num)</span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>book_stats <span class="ot">&lt;-</span> summary_stats3 <span class="sc">%&gt;%</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">Mean =</span> <span class="fu">round</span>(Mean, <span class="at">digits =</span> <span class="dv">2</span>),</span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">SD =</span> <span class="fu">round</span>(SD, <span class="at">digits =</span> <span class="dv">2</span>) )<span class="sc">%&gt;%</span></span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="st">"Book #"</span> <span class="ot">=</span> book_num)</span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">kable</span>(book_stats, <span class="at">align =</span> <span class="st">"c"</span>, <span class="st">"simple"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Shiny App Code</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shinydashboard)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringr)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>atla <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"atla.csv"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">dashboardPage</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dashboardHeader</span>(<span class="at">title =</span> <span class="st">"Wan Shi Tong's Library"</span>),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dashboardSidebar</span>(</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarMenu</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">menuItem</span>(<span class="st">"Character Line Analysis"</span>, <span class="at">tabName =</span> <span class="st">"character_analysis"</span>, <span class="at">icon =</span> <span class="fu">icon</span>(<span class="st">"heart"</span>)),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">menuItem</span>(<span class="st">"IMDB Analysis"</span>, <span class="at">tabName =</span> <span class="st">"imdb_analysis"</span>, <span class="at">icon =</span> <span class="fu">icon</span>(<span class="st">"heart"</span>))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dashboardBody</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tabItems</span>(</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tabItem</span>(<span class="at">tabName =</span> <span class="st">"character_analysis"</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>              <span class="fu">fluidPage</span>(</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>                <span class="fu">titlePanel</span>(<span class="st">"Character Line Analysis"</span>),</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sidebarLayout</span>(</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">sidebarPanel</span>(</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">selectInput</span>(<span class="st">"character_char"</span>, <span class="st">"Select Character(s)"</span>, <span class="at">choices =</span> <span class="fu">as.vector</span>(<span class="fu">unique</span>(atla<span class="sc">$</span>character)),  <span class="at">multiple =</span> <span class="cn">TRUE</span>, <span class="at">selected =</span> <span class="st">"Aang"</span>),</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">selectInput</span>(<span class="st">"director_char"</span>, <span class="st">"Select Director"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"All Directors"</span>, <span class="fu">unique</span>(atla<span class="sc">$</span>director)), <span class="at">multiple =</span> <span class="cn">TRUE</span>, <span class="at">selected =</span> <span class="st">"All Directors"</span>),</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">submitButton</span>(<span class="st">"Update Results!"</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                  ),</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">mainPanel</span>(</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">plotlyOutput</span>(<span class="st">"plot_char"</span>)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tabItem</span>(<span class="at">tabName =</span> <span class="st">"imdb_analysis"</span>,</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>              <span class="fu">fluidPage</span>(</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>                <span class="fu">titlePanel</span>(<span class="st">"IMDB Analysis"</span>),</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sidebarLayout</span>(</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">sidebarPanel</span>(</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">selectInput</span>(<span class="st">"director_imdb"</span>, <span class="st">"Select Director"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">"All Directors"</span>, <span class="fu">unique</span>(atla<span class="sc">$</span>director)), <span class="at">multiple =</span> <span class="cn">TRUE</span>, <span class="at">selected =</span> <span class="st">"All Directors"</span>),</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">submitButton</span>(<span class="st">"Update Results!"</span>)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>                  ),</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">mainPanel</span>(</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">plotlyOutput</span>(<span class="st">"plot_imdb"</span>)</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tabItem</span>(<span class="at">tabName =</span> <span class="st">"Credits"</span>,</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>              <span class="fu">fluidPage</span>(</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>                <span class="fu">titlePanel</span>(<span class="st">"Credits and Copyright Information"</span>),</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>                <span class="fu">mainPanel</span>(</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">h3</span>(<span class="st">"Copyright Information"</span>),</span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">p</span>(<span class="st">"test"</span>)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>              )</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>  <span class="at">skin =</span> <span class="st">"purple"</span> </span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output, session) {</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>  book_colors <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Water"</span> <span class="ot">=</span> <span class="st">"#1f77b4"</span>, </span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Earth"</span> <span class="ot">=</span> <span class="st">"#2ca02c"</span>, </span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"Fire"</span> <span class="ot">=</span> <span class="st">"#ad0000"</span>) </span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>  palette_name <span class="ot">&lt;-</span> <span class="st">"Set1"</span></span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>  character_palette <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">name =</span> palette_name)</span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>  plot_data_char <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>    filtered_data_line <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>      <span class="fu">filter</span>(character <span class="sc">%in%</span> input<span class="sc">$</span>character_char,</span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>             <span class="cf">if</span> (<span class="st">"All Directors"</span> <span class="sc">%in%</span> input<span class="sc">$</span>director_char) <span class="cn">TRUE</span> <span class="cf">else</span> director <span class="sc">%in%</span> input<span class="sc">$</span>director_char)</span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>    palette_name <span class="ot">&lt;-</span> <span class="st">"Set1"</span></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>    director_palette <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">name =</span> palette_name)</span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>    plot_line <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(filtered_data_line <span class="sc">%&gt;%</span></span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">Book =</span> <span class="fu">factor</span>(Book, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Water"</span>, <span class="st">"Earth"</span>, <span class="st">"Fire"</span>))),</span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">aes</span>(<span class="at">x =</span> Episode, <span class="at">y =</span> Lines))</span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">validate</span>(</span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>      <span class="fu">need</span>(<span class="fu">nrow</span>(filtered_data_line) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">"No data available for the selected filters."</span>),</span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>      <span class="fu">need</span>(<span class="fu">length</span>(input<span class="sc">$</span>character_char) <span class="sc">&lt;=</span> <span class="dv">5</span>, <span class="st">"Please only select up to 10 characters."</span>)</span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a>    )  </span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(input<span class="sc">$</span>character_char) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a>      plot_line <span class="ot">&lt;-</span> plot_line <span class="sc">+</span></span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> Book, <span class="at">text =</span> <span class="fu">paste</span>(<span class="st">"IMDB:"</span>, IMDB, <span class="st">"&lt;br&gt;"</span>, <span class="st">"Director:"</span>, director))) <span class="sc">+</span></span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> book_colors, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"Water"</span>, <span class="st">"Earth"</span>, <span class="st">"Fire"</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="st">"Water"</span>, <span class="st">"Earth"</span>, <span class="st">"Fire"</span>)) <span class="sc">+</span></span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> Book))</span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {  </span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a>      plot_line <span class="ot">&lt;-</span> plot_line <span class="sc">+</span></span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> character, <span class="at">text =</span> <span class="fu">paste</span>(<span class="st">"IMDB:"</span>, IMDB, <span class="st">"&lt;br&gt;"</span>, <span class="st">"Director:"</span>, director))) <span class="sc">+</span></span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> character_palette) <span class="sc">+</span>  </span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> character))</span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>    plot_line <span class="ot">&lt;-</span> plot_line <span class="sc">+</span></span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Episode Number"</span>,</span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="st">"Number of Lines"</span>,</span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="st">"Number of Lines per Episode"</span>,</span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a>           <span class="at">color =</span> <span class="cf">if</span> (<span class="fu">length</span>(input<span class="sc">$</span>character_char) <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"Book (season)"</span> <span class="cf">else</span> <span class="st">"Character"</span>)<span class="sc">+</span></span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(filtered_data_line<span class="sc">$</span>Episode)), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(filtered_data_line<span class="sc">$</span>Lines))) <span class="sc">+</span> </span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">61</span>, <span class="at">by =</span> <span class="dv">10</span>)) <span class="sc">+</span> </span>
+<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">max</span>(filtered_data_line<span class="sc">$</span>Lines), <span class="at">by =</span> <span class="dv">10</span>))</span>
+<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(plot_line)</span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">reactive</span>({</span>
+<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a>  filtered_data <span class="ot">&lt;-</span> atla <span class="sc">%&gt;%</span></span>
+<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="cf">if</span> (<span class="st">"All Directors"</span> <span class="sc">%in%</span> input<span class="sc">$</span>director_imdb) <span class="cn">TRUE</span> <span class="cf">else</span> director <span class="sc">%in%</span> input<span class="sc">$</span>director_imdb)</span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a>  <span class="fu">validate</span>(</span>
+<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>    <span class="fu">need</span>(<span class="fu">nrow</span>(filtered_data) <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">"No data available for the selected filters."</span>))</span>
+<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>  palette_name <span class="ot">&lt;-</span> <span class="st">"Set1"</span></span>
+<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a>  director_palette <span class="ot">&lt;-</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">name =</span> palette_name)</span>
+<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">mutate</span>(<span class="at">Book =</span> <span class="fu">factor</span>(Book, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Water"</span>, <span class="st">"Earth"</span>, <span class="st">"Fire"</span>))),</span>
+<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">aes</span>(<span class="at">x =</span> Episode, <span class="at">y =</span> IMDB)) </span>
+<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(input<span class="sc">$</span>director_imdb) <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>    plot <span class="ot">&lt;-</span> plot <span class="sc">+</span></span>
+<span id="cb6-138"><a href="#cb6-138" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> Book,  <span class="at">text =</span> <span class="fu">paste</span>(<span class="st">"Director:"</span>, director))) <span class="sc">+</span></span>
+<span id="cb6-139"><a href="#cb6-139" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> book_colors, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">"Water"</span>, <span class="st">"Earth"</span>, <span class="st">"Fire"</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="st">"Water"</span>, <span class="st">"Earth"</span>, <span class="st">"Fire"</span>)) <span class="sc">+</span></span>
+<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> Book)) <span class="sc">+</span></span>
+<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> <span class="st">"Smooth"</span>), <span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>)</span>
+<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {  </span>
+<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a>    plot <span class="ot">&lt;-</span> plot <span class="sc">+</span></span>
+<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> director, <span class="at">text =</span> <span class="fu">paste</span>(<span class="st">"Director:"</span>, director))) <span class="sc">+</span></span>
+<span id="cb6-145"><a href="#cb6-145" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_manual</span>(<span class="at">values =</span> director_palette) <span class="sc">+</span>  </span>
+<span id="cb6-146"><a href="#cb6-146" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> director)) </span>
+<span id="cb6-147"><a href="#cb6-147" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-148"><a href="#cb6-148" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-149"><a href="#cb6-149" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">&lt;-</span> plot <span class="sc">+</span></span>
+<span id="cb6-150"><a href="#cb6-150" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Episode Number"</span>,</span>
+<span id="cb6-151"><a href="#cb6-151" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Episode IMDB Rating"</span>,</span>
+<span id="cb6-152"><a href="#cb6-152" aria-hidden="true" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">"IMDB Rating per Episode"</span>,</span>
+<span id="cb6-153"><a href="#cb6-153" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="cf">if</span> (<span class="fu">length</span>(input<span class="sc">$</span>director_imdb) <span class="sc">==</span> <span class="dv">1</span>) <span class="st">"Book (season)"</span> <span class="cf">else</span> <span class="st">"Character"</span>) <span class="sc">+</span></span>
+<span id="cb6-154"><a href="#cb6-154" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(filtered_data<span class="sc">$</span>Episode)), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>)) <span class="sc">+</span> </span>
+<span id="cb6-155"><a href="#cb6-155" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">61</span>, <span class="at">by =</span> <span class="dv">10</span>)) <span class="sc">+</span> </span>
+<span id="cb6-156"><a href="#cb6-156" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">1</span>))</span>
+<span id="cb6-157"><a href="#cb6-157" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-158"><a href="#cb6-158" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(plot)</span>
+<span id="cb6-159"><a href="#cb6-159" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-160"><a href="#cb6-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-161"><a href="#cb6-161" aria-hidden="true" tabindex="-1"></a>output<span class="sc">$</span>plot_char <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
+<span id="cb6-162"><a href="#cb6-162" aria-hidden="true" tabindex="-1"></a>  plot_data_char_value <span class="ot">&lt;-</span> <span class="fu">plot_data_char</span>()</span>
+<span id="cb6-163"><a href="#cb6-163" aria-hidden="true" tabindex="-1"></a>  plotly<span class="sc">::</span><span class="fu">ggplotly</span>(plot_data_char_value)</span>
+<span id="cb6-164"><a href="#cb6-164" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-165"><a href="#cb6-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-166"><a href="#cb6-166" aria-hidden="true" tabindex="-1"></a>output<span class="sc">$</span>plot_imdb <span class="ot">&lt;-</span> <span class="fu">renderPlotly</span>({</span>
+<span id="cb6-167"><a href="#cb6-167" aria-hidden="true" tabindex="-1"></a>  plot_data_value <span class="ot">&lt;-</span> <span class="fu">plot_data</span>()</span>
+<span id="cb6-168"><a href="#cb6-168" aria-hidden="true" tabindex="-1"></a>  plotly<span class="sc">::</span><span class="fu">ggplotly</span>(plot_data_value)</span>
+<span id="cb6-169"><a href="#cb6-169" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-170"><a href="#cb6-170" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-171"><a href="#cb6-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-172"><a href="#cb6-172" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui =</span> ui, <span class="at">server =</span> server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

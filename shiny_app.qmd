@@ -5,3 +5,9 @@ authors: "Morgen Kaufman"
 format: html
 editor: visual
 ---
+
+## Shiny App Dashboard 
+
+click for link!
+
+[![](images/newplot-2.png)](https://2s3kzj-morgen-k.shinyapps.io/shinyapp/)

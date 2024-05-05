@@ -229,17 +229,14 @@ the main limitation of this project is that there is no marking made for charact
 
 -   As the show progressed, the number of lines per season dropped although only marginally there is a slight downward trend.
 
-```{=html}
 <!-- -->
-```
+
 -   In the case of the main characters (Aang, Sokka, and Katara) there is a general trend of the number of lines for the character to spike in the middle / later end of a season with a drop towards the very end of the season. S Additionally the number of lines fluctuates from episode to episode with no clear observable trend.
 
-```{=html}
 <!-- -->
-```
+
 -   Through looking at some characters such as Azula, Toph, and Zuko, we can pinpoint key episodes in which the character likely played a large role by looking at the line trend.
 
-```{=html}
 <!-- -->
-```
+
 -   Critics love ATLA. As we can see by the season breakdown of IMDB scores, the lowest rating the show ever got was a 7.1, with some of the highest ratings reaching almost a full 10 (perfect score). Additionally the director did not seem to have any direct correlation to the IMDB rating.
