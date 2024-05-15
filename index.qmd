@@ -29,15 +29,15 @@ library(grid)
 #| label: load-data
 #| include: false
 
-atla <- read_csv("~/Desktop/Data/project-02-morgenk/EXTRA/data/atla.csv")
+atla <- read_csv("EXTRA/data/atla.csv")
 ```
 
 ## Introduction
 
-In this project, I sought to answer a number of questions regarding the 2000s children's TV show Avatar: The Last Airbender. How are lines distributed across episodes? How does it differ by character? How does it differ by season? How does it differ by director? How do IMDB scores change over the course of the show? What is the IMDB score average per season? To answer these questions, I used the[ appa package](https://github.com/averyrobbins1/appa) by[ Avery Robbins](https://github.com/averyrobbins1). The purpose of this package is to “provide an easy way to share Avatar: The Last Airbender transcript data.” The package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the show. The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions). The show consists of 61 episodes and 3 books (seasons). The data frame includes 13,385 rows and 12 variables. The included variables are as follows: 
+In this project, I sought to answer a number of questions regarding the 2000s children's TV show Avatar: The Last Airbender. How are lines distributed across episodes? How does it differ by character? How does it differ by season? How does it differ by director? How do IMDB scores change over the course of the show? What is the IMDB score average per season? To answer these questions, I used the[appa package](https://github.com/averyrobbins1/appa) by[Avery Robbins](https://github.com/averyrobbins1). The purpose of this package is to “provide an easy way to share Avatar: The Last Airbender transcript data.” The package includes a dataset containing the transcripts, writers, directors, and IMDB ratings of every episode of the show. The data is organized by lines of the script with each row corresponding to one line (either spoken by a character or scene descriptions). The show consists of 61 episodes and 3 books (seasons). The data frame includes 13,385 rows and 12 variables. The included variables are as follows: 
 
 | Variable Name     | Description                                                             |
-|----------------------|--------------------------------------------------|
+|-----------------------|-------------------------------------------------|
 | id                | an id number for each row, essentially just a row number                |
 | book              | the name of each book, or season, in the series: Water, Earth, and Fire |
 | book_num          | an id number for each book, 1-3                                         |
